@@ -2,6 +2,7 @@ package flag
 
 import (
 	"bitmap/utils"
+	"errors"
 	"fmt"
 )
 
@@ -30,16 +31,16 @@ var (
 
 // Errors
 var (
-	HelpCommand                   = fmt.Errorf("help command called")
-	ErrIncorrectNumberOfArguments = fmt.Errorf("incorrect number of arguments")
-	ErrTooManyArguments           = fmt.Errorf("too many arguments entered")
-	ErrTooLittleArguments         = fmt.Errorf("too little arguments entered")
-	ErrIncorrectCommandName       = fmt.Errorf("incorrect command name, to get help add --help flag")
-	ErrIncorrectArgumentFormat    = fmt.Errorf("incorrect argument(s) format, correct format: --<flag_name>=<value>")
-	ErrIncorrectArgumentName      = fmt.Errorf("incorrect argument(s) name, to get help add --help flag")
-	ErrIncorrectArgumentValue     = fmt.Errorf("incorrect argument(s) value, to get help add --help flag")
-	ErrNotNumericArgumentValue    = fmt.Errorf("argument(s) value is not numeric, to get help add --help flag")
-	ErrIncorrectOptionName        = fmt.Errorf("incorrect option's name, to get help add --help flag")
+	HelpCommand                   = errors.New("help command called")
+	ErrIncorrectNumberOfArguments = errors.New("incorrect number of arguments")
+	ErrTooManyArguments           = errors.New("too many arguments entered")
+	ErrTooLittleArguments         = errors.New("too little arguments entered")
+	ErrIncorrectCommandName       = errors.New("incorrect command name, to get help add --help flag")
+	ErrIncorrectArgumentFormat    = errors.New("incorrect argument(s) format, correct format: --<flag_name>=<value>")
+	ErrIncorrectArgumentName      = errors.New("incorrect argument(s) name, to get help add --help flag")
+	ErrIncorrectArgumentValue     = errors.New("incorrect argument(s) value, to get help add --help flag")
+	ErrNotNumericArgumentValue    = errors.New("argument(s) value is not numeric, to get help add --help flag")
+	ErrIncorrectOptionName        = errors.New("incorrect option's name, to get help add --help flag")
 )
 
 func Parse(args []string) error {
