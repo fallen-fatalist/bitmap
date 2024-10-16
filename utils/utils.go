@@ -53,3 +53,14 @@ func IsNumeric(s string) bool {
 	}
 	return true
 }
+
+// The algorithm of fast
+func BinPow(x, n uint32) uint32 {
+	if n == 0 {
+		return 1
+	} else if n%2 == 1 {
+		return x * BinPow(x, n-1)
+	} else {
+		return BinPow(x, n/2) * BinPow(x, n/2)
+	}
+}
