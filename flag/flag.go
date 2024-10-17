@@ -71,7 +71,6 @@ func Parse(args []string) error {
 	case Command == "apply":
 		// Help command
 		if len(args) == 1 && utils.In(args[0], helps) != -1 {
-			PrintHelp()
 			return HelpCommand
 		} else if len(args) < 3 {
 			return ErrIncorrectNumberOfArguments
