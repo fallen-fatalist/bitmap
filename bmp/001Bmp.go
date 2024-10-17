@@ -12,17 +12,17 @@ type bmp struct {
 // header corresponds to BITMAPINFOHEADER version for 24 bits
 // see: https://upload.wikimedia.org/wikipedia/commons/7/75/BMPfileFormat.svg
 type dibHeader struct {
-	size                  uint32
-	width                 uint32
-	height                uint32
-	colorPlane            uint16
-	bitsPerPixel          uint16
-	compressionMethod     uint32
-	imageSize             uint32
-	horizontalResolution  uint32
-	verticalResolution    uint32
-	colorsNumber          uint32
-	importantColorsNumber uint32
+	Size                  uint32
+	Width                 uint32
+	Height                uint32
+	ColorPlane            uint16
+	BitsPerPixel          uint16
+	CompressionMethod     uint32
+	ImageSize             uint32
+	HorizontalResolution  uint32
+	VerticalResolution    uint32
+	ColorsNumber          uint32
+	ImportantColorsNumber uint32
 }
 
 // Fields will be added in future to correspond BITMAPV5HEADER
@@ -58,3 +58,7 @@ type dibHeader struct {
 
 // Color table for color pallete <= 8 bits (will be added in future)
 // type colorTable []byte
+
+func (b *bmp) GetPixelNumber() uint16 {
+	return b.dibHeader.BitsPerPixel
+}
