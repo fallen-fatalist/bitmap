@@ -75,7 +75,7 @@ func Load(fileName string) (*bmp, error) {
 	// Reading  pixel array
 
 	// row size is the number of pixels in one row by row
-	rowSize := (bmp.dibHeader.BitsPerPixel*uint16(bmp.dibHeader.Width) + 31) / 32 * 4
+	rowSize := (uint32(bmp.dibHeader.BitsPerPixel)*(bmp.dibHeader.Width) + 31) / 32 * 4
 	bmp.pixelArray = make([][]byte, bmp.dibHeader.Height)
 
 	// reading pixel array row by row
@@ -88,7 +88,7 @@ func Load(fileName string) (*bmp, error) {
 	}
 
 	// Reading unused bytes after pixel array
-	unusedBuf2 = make([]byte, bmp.fileHeader.FileSize-bmp.dibHeader.ImageSize-bmp.dibHeader.Size-14)
+	unusedBuf2 = make([]byte, bmp.fileHeader.FileSize-bmp.dibHeader.ImageSize-uint32(len(unusedBuf1))-54)
 	if err := binary.Read(file, binary.LittleEndian, &unusedBuf2); err != nil {
 		return nil, err
 	}
