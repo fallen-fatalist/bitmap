@@ -1,9 +1,9 @@
 package flag
 
 import (
-	"bitmap/utils"
-	"errors"
 	"fmt"
+
+	"bitmap/utils"
 )
 
 // Public main variables
@@ -31,16 +31,16 @@ var (
 
 // Errors
 var (
-	HelpCommand                   = errors.New("help command called")
-	ErrIncorrectNumberOfArguments = errors.New("incorrect number of arguments")
-	ErrTooManyArguments           = errors.New("too many arguments entered")
-	ErrTooLittleArguments         = errors.New("too little arguments entered")
-	ErrIncorrectCommandName       = errors.New("incorrect command name, to get help add --help flag")
-	ErrIncorrectArgumentFormat    = errors.New("incorrect argument(s) format, correct format: --<flag_name>=<value>")
-	ErrIncorrectArgumentName      = errors.New("incorrect argument(s) name, to get help add --help flag")
-	ErrIncorrectArgumentValue     = errors.New("incorrect argument(s) value, to get help add --help flag")
-	ErrNotNumericArgumentValue    = errors.New("argument(s) value is not numeric, to get help add --help flag")
-	ErrIncorrectOptionName        = errors.New("incorrect option's name, to get help add --help flag")
+	HelpCommand                   = fmt.Errorf("Help command called")
+	ErrIncorrectNumberOfArguments = fmt.Errorf("Incorrect number of arguments")
+	ErrTooManyArguments           = fmt.Errorf("Too many arguments entered")
+	ErrTooLittleArguments         = fmt.Errorf("Too little arguments entered")
+	ErrIncorrectCommandName       = fmt.Errorf("Incorrect command name")
+	ErrIncorrectArgumentFormat    = fmt.Errorf("Incorrect argument(s) format, correct format: --<flag_name>=<value>")
+	ErrIncorrectArgumentName      = fmt.Errorf("Incorrect argument(s) name")
+	ErrIncorrectArgumentValue     = fmt.Errorf("Incorrect argument(s) value")
+	ErrNotNumericArgumentValue    = fmt.Errorf("Argument(s) value is not numeric")
+	ErrIncorrectOptionName        = fmt.Errorf("Incorrect option's name")
 )
 
 func Parse(args []string) error {
@@ -55,9 +55,6 @@ func Parse(args []string) error {
 	// help Case
 	case utils.In(Command, helps) != -1 || Command == "":
 		Command = ""
-		if len(args) != 0 {
-			return ErrIncorrectNumberOfArguments
-		}
 		return HelpCommand
 	case Command == "header":
 		if len(args) > 1 {
@@ -70,7 +67,7 @@ func Parse(args []string) error {
 		return nil
 	case Command == "apply":
 		// Help command
-		if len(args) == 1 && utils.In(args[0], helps) != -1 {
+		if utils.In(args[0], helps) != -1 {
 			return HelpCommand
 		} else if len(args) < 3 {
 			return ErrIncorrectNumberOfArguments
@@ -100,6 +97,10 @@ func Parse(args []string) error {
 			case "rotate":
 				if utils.In(flagValue, rotateValues) == -1 {
 					return ErrIncorrectArgumentValue
+				} else if flagValue == "right" {
+					flagValue = "90"
+				} else if flagValue == "left" {
+					flagValue = "-90"
 				}
 
 			case "crop":

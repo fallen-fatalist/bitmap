@@ -22,7 +22,7 @@ func TestParse(t *testing.T) {
 		{
 			name: "Help command with other args",
 			args: []string{"--help", "other"},
-			err:  ErrIncorrectNumberOfArguments,
+			err:  HelpCommand,
 		},
 		{
 			name:    "Incorrect command name",
