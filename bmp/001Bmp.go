@@ -1,5 +1,7 @@
 package bmp
 
+import "fmt"
+
 // Device Independent Bitmap
 // for more detail see: https://en.wikipedia.org/wiki/BMP_file_format
 type bmp struct {
@@ -58,6 +60,19 @@ type dibHeader struct {
 
 // Color table for color pallete <= 8 bits (will be added in future)
 // type colorTable []byte
+
+func (b *bmp) PrintHeader() {
+	fmt.Println("BMP Header:")
+	fmt.Println("- FileType BM")
+	fmt.Println("- FileSizeInBytes", b.fileHeader.FileSize)
+	fmt.Println("- HeaderSize", 14+b.dibHeader.Size)
+	fmt.Println("DIB Header:")
+	fmt.Println("- DibHeaderSize", b.dibHeader.Size)
+	fmt.Println("- WidthInPixels", b.dibHeader.Width)
+	fmt.Println("- HeightInPixels", b.dibHeader.Height)
+	fmt.Println("- PixelSizeInBits", b.dibHeader.BitsPerPixel)
+	fmt.Println("- ImageSizeInBytes", b.dibHeader.ImageSize)
+}
 
 func (b *bmp) GetPixelNumber() uint16 {
 	return b.dibHeader.BitsPerPixel

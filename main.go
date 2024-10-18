@@ -30,33 +30,30 @@ func main() {
 		}
 	}
 
-	// switch flag.Command {
-	// case "header":
-	// 	return
-	// case "apply":
-	// 	// Processing validation
-	// 	if bmp.GetPixelNumber() != 24 {
-	// 		fmt.Fprintln(os.Stderr, "File: %s is not 24 bit color pallete", flag.SourceFile)
-	// 		os.Exit(1)
-	// 	}
-	// 	// Arguments proccessing
-	// 	for _, arg := range flag.Arguments {
-	// 		switch arg.Name {
-	// 		case "mirror":
-	// 			return
-	// 		case "filter":
-	// 			switch arg.Value {
-	// 			case "blur":
-	// 				return
-
-	// 			}
-	// 		case "crop":
-	// 			return
-	// 		case "rotate":
-	// 			return
-	// 		}
-	// 	}
-	// }
+	switch flag.Command {
+	case "header":
+		bmpFile.PrintHeader()
+		return
+	case "apply":
+		// Processing validation
+		if bmpFile.GetPixelNumber() != 24 {
+			fmt.Fprintln(os.Stderr, "File: %s is not 24 bit color pallete", flag.SourceFile)
+			os.Exit(1)
+		}
+		// Arguments proccessing
+		for _, arg := range flag.Arguments {
+			switch arg.Name {
+			case "mirror":
+				return
+			case "filter":
+				return
+			case "crop":
+				return
+			case "rotate":
+				return
+			}
+		}
+	}
 
 	bmpFile.Save(flag.OutputFile)
 }

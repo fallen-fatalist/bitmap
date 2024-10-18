@@ -24,6 +24,8 @@ type fileHeader struct {
 	Offset    uint32
 }
 
+const BMPsignature = 19778
+
 // Buffs where unused part of DIB header or ICC profile will be recorded (all metadata which differs from BITMAPINFOHEADER)
 // see (https://en.wikipedia.org/wiki/BMP_file_format#DIB_header_(bitmap_information_header))
 var (
@@ -49,7 +51,7 @@ func Load(fileName string) (*bmp, error) {
 	}
 
 	// validation for bmp signature
-	if bmp.fileHeader.Signature != 19778 {
+	if bmp.fileHeader.Signature != BMPsignature {
 		return nil, ErrIncorrectFileFormat
 	}
 
