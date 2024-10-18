@@ -37,14 +37,14 @@ func main() {
 	case "apply":
 		// Processing validation
 		if bmpFile.GetPixelNumber() != 24 {
-			fmt.Fprintln(os.Stderr, "File: %s is not 24 bit color pallete", flag.SourceFile)
+			fmt.Fprintf(os.Stderr, "File: %s is not 24 bit color pallete", flag.SourceFile)
 			os.Exit(1)
 		}
 		// Arguments proccessing
 		for _, arg := range flag.Arguments {
 			switch arg.Name {
 			case "mirror":
-				return
+				bmpFile.Mirror(arg.Value)
 			case "filter":
 				return
 			case "crop":

@@ -80,7 +80,7 @@ func Parse(args []string) error {
 				return err
 			}
 
-			// Argument validation
+			// Argument handling
 			switch flagName {
 			case "mirror":
 				if utils.In(flagValue, mirrorValues) == -1 {
