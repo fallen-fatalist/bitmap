@@ -26,8 +26,10 @@ type fileHeader struct {
 
 // Buffs where unused part of DIB header or ICC profile will be recorded (all metadata which differs from BITMAPINFOHEADER)
 // see (https://en.wikipedia.org/wiki/BMP_file_format#DIB_header_(bitmap_information_header))
-var unusedBuf1 []byte
-var unusedBuf2 []byte
+var (
+	unusedBuf1 []byte
+	unusedBuf2 []byte
+)
 
 // BMP file reading
 func Load(fileName string) (*bmp, error) {
