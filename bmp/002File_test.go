@@ -21,8 +21,23 @@ func TestLoadSave(t *testing.T) {
 		},
 		{
 			name:       "138 bytes header size BMP file",
-			sourceFile: "../samples/sample_640×426.bmp",
-			outputFile: "../samples/sample_640×426-saved.bmp",
+			sourceFile: "../samples/sample_640x426.bmp",
+			outputFile: "../samples/sample_640x426-saved.bmp",
+		},
+		{
+			name:       "138 bytes header HD resolution size BMP file",
+			sourceFile: "../samples/sample_1280x853.bmp",
+			outputFile: "../samples/sample_1280x853-saved.bmp",
+		},
+		{
+			name:       "138 bytes header FullHD resolution size BMP file",
+			sourceFile: "../samples/sample_1920x1280.bmp",
+			outputFile: "../samples/sample_1920x1280-saved.bmp",
+		},
+		{
+			name:       "138 bytes header 5K resolution size BMP file",
+			sourceFile: "../samples/sample_5184x3456.bmp",
+			outputFile: "../samples/sample_5184x3456-saved.bmp",
 		},
 	}
 
