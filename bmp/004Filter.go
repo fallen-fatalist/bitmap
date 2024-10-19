@@ -44,7 +44,7 @@ func (b *bmp) Filter(flagValue string) error {
 		// Weighted method
 		// see (https://idmnyu.github.io/p5.js-image/Filters/index.html)
 		for rowIdx := range b.pixelArray {
-			for colIdx := uint32(0); colIdx < rowSize; colIdx += 3 {
+			for colIdx := uint32(0); colIdx+2 < rowSize; colIdx += 3 {
 				// Scale color value according to weight
 				RedVal := float32(b.pixelArray[rowIdx][colIdx]) * 0.11
 				GreenVal := float32(b.pixelArray[rowIdx][colIdx+1]) * 0.59
@@ -59,7 +59,7 @@ func (b *bmp) Filter(flagValue string) error {
 		}
 	case "negative":
 		for rowIdx := range b.pixelArray {
-			for colIdx := uint32(0); colIdx < rowSize; colIdx += 3 {
+			for colIdx := uint32(0); colIdx+2 < rowSize; colIdx += 3 {
 				// Invert color values
 				b.pixelArray[rowIdx][colIdx] = 255 - b.pixelArray[rowIdx][colIdx]
 				b.pixelArray[rowIdx][colIdx+1] = 255 - b.pixelArray[rowIdx][colIdx+1]
@@ -70,7 +70,7 @@ func (b *bmp) Filter(flagValue string) error {
 		// Microsoft recommended values
 		// see (https://idmnyu.github.io/p5.js-image/Filters/index.html)
 		for rowIdx := range b.pixelArray {
-			for colIdx := uint32(0); colIdx < rowSize; colIdx += 3 {
+			for colIdx := uint32(0); colIdx+2 < rowSize; colIdx += 3 {
 				// Get color values
 				blueColor, greenColor, redColor := b.pixelArray[rowIdx][colIdx], b.pixelArray[rowIdx][colIdx+1], b.pixelArray[rowIdx][colIdx+2]
 
@@ -98,7 +98,7 @@ func (b *bmp) Filter(flagValue string) error {
 			}
 		}
 	case "pixelate":
-		return nil
+		
 	case "blur":
 		// Box 5x5 blur method
 		// kernel related weight of color sums
@@ -112,7 +112,7 @@ func (b *bmp) Filter(flagValue string) error {
 
 		// Iterate over pixels and calculate color sums in box and assign sums to pixel
 		for rowIdx := uint32(0); rowIdx < uint32(len(b.pixelArray)); rowIdx++ {
-			for colIdx := uint32(0); colIdx < rowSize; colIdx += 3 {
+			for colIdx := uint32(0); colIdx+2 < rowSize; colIdx += 3 {
 				// Fetch the sum in the box
 				sum_B, sum_G, sum_R, pixelCount := b.boxPixelsSum(5, int(rowIdx), int(colIdx))
 
