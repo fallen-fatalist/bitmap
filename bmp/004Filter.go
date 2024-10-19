@@ -100,14 +100,9 @@ func (b *bmp) Filter(flagValue string) error {
 	case "pixelate":
 		return nil
 	case "blur":
-		// Gaussian 3x3 blur method
+		// Box 5x5 blur method
 		// kernel related weight of color sums
 		// see (https://idmnyu.github.io/p5.js-image/Blur/index.html)
-		kernel := [][]uint16{
-			{1, 2, 1},
-			{2, 4, 2},
-			{1, 2, 1},
-		}
 
 		// Initialize blurred pixel array
 		blurredPixelArray := make([][]byte, len(b.pixelArray))
@@ -119,12 +114,12 @@ func (b *bmp) Filter(flagValue string) error {
 		for rowIdx := uint32(0); rowIdx < uint32(len(b.pixelArray)); rowIdx++ {
 			for colIdx := uint32(0); colIdx < rowSize; colIdx += 3 {
 				// Fetch the sum in the box
-				sum_B, sum_G, sum_R := b.boxPixelsSum(kernel, int(rowIdx), int(colIdx))
+				sum_B, sum_G, sum_R, pixelCount := b.boxPixelsSum(5, int(rowIdx), int(colIdx))
 
 				// Assign center pixel average color value of all surrounding pixels including itself
-				blurredPixelArray[rowIdx][colIdx] = byte(sum_B / 9)   // Blue
-				blurredPixelArray[rowIdx][colIdx+1] = byte(sum_G / 9) // Green
-				blurredPixelArray[rowIdx][colIdx+2] = byte(sum_R / 9) // Red
+				blurredPixelArray[rowIdx][colIdx] = byte(sum_B / uint16(pixelCount))   // Blue
+				blurredPixelArray[rowIdx][colIdx+1] = byte(sum_G / uint16(pixelCount)) // Green
+				blurredPixelArray[rowIdx][colIdx+2] = byte(sum_R / uint16(pixelCount)) // Red
 			}
 		}
 		// Assign blurred array
@@ -141,24 +136,23 @@ func (b *bmp) Filter(flagValue string) error {
 // sum_B - sum of blue color values in the box
 // sum_G - sum of green color values in the box
 // sum_R - sum of red color values in the box
-func (b *bmp) boxPixelsSum(kernel [][]uint16, rowIdx, colIdx int) (sum_B, sum_G, sum_R uint16) {
+func (b *bmp) boxPixelsSum(kernelSize, rowIdx, colIdx int) (sum_B, sum_G, sum_R uint16, neighborPixelCount int) {
+	kernelOffset := kernelSize / 2
 
-	for dx := -1; dx < 2; dx++ {
-		for dy := -1; dy < 2; dy++ {
-
+	for dx := -kernelOffset; dx < kernelOffset; dx++ {
+		for dy := -kernelOffset; dy < kernelOffset; dy++ {
 			// Fetching pixel
 			pixel, err := b.fetchPixel(rowIdx+dx, colIdx+dy*3)
 			if err != nil {
 				continue
 			}
 
-			// Kernel multiplier
-			multiplier := kernel[dx+1][dy+1]
-
 			// Adding pixel color value to sum
-			sum_B += uint16(pixel[0]) * multiplier // Blue
-			sum_G += uint16(pixel[1]) * multiplier // Green
-			sum_R += uint16(pixel[2]) * multiplier // Red
+			sum_B += uint16(pixel[0]) // Blue
+			sum_G += uint16(pixel[1]) // Green
+			sum_R += uint16(pixel[2]) // Red
+			// Increment pixel count
+			neighborPixelCount++
 		}
 	}
 
