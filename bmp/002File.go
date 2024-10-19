@@ -8,10 +8,10 @@ import (
 
 // Errors
 var (
-	ErrIncorrectSignature        = errors.New("File is not in BMP format, or file is corrupted.")
-	ErrFileIsCorrupted           = errors.New("BMP File is corrupted.")
-	ErrIncorrectFileFormat       = errors.New("File's format does not match BMP format.")
-	ErrNon24BitImageNotSupported = errors.New("Image with 24 bit color pallete is not supported.")
+	ErrIncorrectSignature        = errors.New("File is not in BMP format, or file is corrupted")
+	ErrFileIsCorrupted           = errors.New("BMP File is corrupted")
+	ErrIncorrectFileFormat       = errors.New("File's format does not match BMP format")
+	ErrNon24BitImageNotSupported = errors.New("Image with 24 bit color pallete is not supported")
 )
 
 // File header of Device independent bitmap
@@ -24,13 +24,19 @@ type fileHeader struct {
 	Offset    uint32
 }
 
-const BMPsignature = 19778
-
-// Buffs where unused part of DIB header or ICC profile will be recorded (all metadata which differs from BITMAPINFOHEADER)
-// see (https://en.wikipedia.org/wiki/BMP_file_format#DIB_header_(bitmap_information_header))
+// Variables
 var (
+	// Buffs where unused part of DIB header or ICC profile will be recorded (all metadata which differs from BITMAPINFOHEADER)
+	// see (https://en.wikipedia.org/wiki/BMP_file_format#DIB_header_(bitmap_information_header))
 	unusedBuf1 []byte
 	unusedBuf2 []byte
+	// Needed to iterate over rows
+	rowSize uint32
+)
+
+// Constants
+const (
+	BMPsignature = 19778
 )
 
 // BMP file reading
@@ -77,7 +83,7 @@ func Load(fileName string) (*bmp, error) {
 	// Reading  pixel array
 
 	// row size is the number of pixels in one row by row
-	rowSize := (uint32(bmp.dibHeader.BitsPerPixel)*(bmp.dibHeader.Width) + 31) / 32 * 4
+	rowSize = (uint32(bmp.dibHeader.BitsPerPixel)*(bmp.dibHeader.Width) + 31) / 32 * 4
 	pixelsNumber := rowSize * bmp.dibHeader.Height
 
 	bmp.pixelArray = make([][]byte, bmp.dibHeader.Height)
