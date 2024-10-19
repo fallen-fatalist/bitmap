@@ -25,7 +25,7 @@ var (
 	commands     = []string{"header", "apply"}
 	helps        = []string{"-h", "--help", "help"}
 	mirrorValues = []string{"h", "hor", "horizontal", "horizontally", "v", "ver", "vertical", "vertically"}
-	filterValues = []string{"red", "green", "blue", "grayscale", "negative", "pixelate", "blur"}
+	filterValues = []string{"red", "green", "blue", "grayscale", "negative", "pixelate", "blur", "sepia"}
 	rotateValues = []string{"right", "90", "180", "270", "left", "-90", "-180", "-270"}
 )
 
@@ -209,6 +209,7 @@ func PrintHelp() {
 		fmt.Println("		- green		: filter retains only the green channel")
 		fmt.Println("		- grayscale	: filter converts the image to grayscale")
 		fmt.Println("		- negative 	: applies a negative filter")
+		fmt.Println("		- sepia		: applies a reddish brown color effect")
 		fmt.Println("		- pixelate 	: apply a pixelation effect, option pixelates the image with a block of 20 pixels by default")
 		fmt.Println("		- blur 		: applies a blur effect")
 		fmt.Println("		usage example: ./bitmap apply --filter=blur sample.bmp sample-filtered-blur.bmp")

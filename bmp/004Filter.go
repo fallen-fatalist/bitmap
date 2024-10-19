@@ -10,6 +10,10 @@ var (
 	ErrIndexOutOfBound      = errors.New("Index out of bounds of pixel array")
 )
 
+const (
+	eps = 0.01
+)
+
 func (b *bmp) Filter(flagValue string) error {
 	switch flagValue {
 	case "red":
@@ -46,22 +50,59 @@ func (b *bmp) Filter(flagValue string) error {
 				GreenVal := float32(b.pixelArray[rowIdx][colIdx+1]) * 0.59
 				BlueVal := float32(b.pixelArray[rowIdx][colIdx+2]) * 0.3
 				// Sum colors to get gray color
-				GrayVal := byte(RedVal + GreenVal + BlueVal)
+				LumaVal := byte(RedVal + GreenVal + BlueVal)
 				// Assign color to pixel
-				b.pixelArray[rowIdx][colIdx] = GrayVal   // Blue
-				b.pixelArray[rowIdx][colIdx+1] = GrayVal // Green
-				b.pixelArray[rowIdx][colIdx+2] = GrayVal // Red
+				b.pixelArray[rowIdx][colIdx] = LumaVal   // Blue
+				b.pixelArray[rowIdx][colIdx+1] = LumaVal // Green
+				b.pixelArray[rowIdx][colIdx+2] = LumaVal // Red
 			}
 		}
 	case "negative":
-		return nil
+		for rowIdx := range b.pixelArray {
+			for colIdx := uint32(0); colIdx < rowSize; colIdx += 3 {
+				// Invert color values
+				b.pixelArray[rowIdx][colIdx] = 255 - b.pixelArray[rowIdx][colIdx]
+				b.pixelArray[rowIdx][colIdx+1] = 255 - b.pixelArray[rowIdx][colIdx+1]
+				b.pixelArray[rowIdx][colIdx+2] = 255 - b.pixelArray[rowIdx][colIdx+2]
+			}
+		}
+	case "sepia":
+		// Microsoft recommended values
+		// see (https://idmnyu.github.io/p5.js-image/Filters/index.html)
+		for rowIdx := range b.pixelArray {
+			for colIdx := uint32(0); colIdx < rowSize; colIdx += 3 {
+				// Get color values
+				blueColor, greenColor, redColor := b.pixelArray[rowIdx][colIdx], b.pixelArray[rowIdx][colIdx+1], b.pixelArray[rowIdx][colIdx+2]
+
+				// Apply ratio to colors
+				blueSepia := float32(redColor)*.272 + float32(greenColor)*.534 + float32(blueColor)*.131
+				// condition of exceeding 255
+				if blueSepia-255. > eps {
+					blueSepia = 255.
+				}
+				greenSepia := float32(redColor)*.349 + float32(greenColor)*.686 + float32(blueColor)*.168
+				// condition of exceeding 255
+				if greenSepia-255 > eps {
+					greenSepia = 255.
+				}
+				redSepia := float32(redColor)*.393 + float32(greenColor)*.769 + float32(blueColor)*.189
+				// condition of exceeding 255
+				if redSepia-255 > eps {
+					redSepia = 255.
+				}
+
+				// Assign new colors
+				b.pixelArray[rowIdx][colIdx] = byte(blueSepia)
+				b.pixelArray[rowIdx][colIdx+1] = byte(greenSepia)
+				b.pixelArray[rowIdx][colIdx+2] = byte(redSepia)
+			}
+		}
 	case "pixelate":
 		return nil
 	case "blur":
 		// Gaussian 3x3 blur method
 		// kernel related weight of color sums
 		// see (https://idmnyu.github.io/p5.js-image/Blur/index.html)
-		// TODO: enhance blur
 		kernel := [][]uint16{
 			{1, 2, 1},
 			{2, 4, 2},
