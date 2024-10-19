@@ -47,9 +47,14 @@ func main() {
 				err := bmpFile.Mirror(arg.Value)
 				if err != nil {
 					fmt.Fprintf(os.Stderr, "Error while Mirroring the BMP image: %s.\n", err)
+					os.Exit(1)
 				}
 			case "filter":
-				return
+				err := bmpFile.Filter(arg.Value)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "Error while Filtering the BMP image: %s.\n", err)
+					os.Exit(1)
+				}
 			case "crop":
 				return
 			case "rotate":
