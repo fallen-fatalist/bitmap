@@ -44,7 +44,10 @@ func main() {
 		for _, arg := range flag.Arguments {
 			switch arg.Name {
 			case "mirror":
-				bmpFile.Mirror(arg.Value)
+				err := bmpFile.Mirror(arg.Value)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "Error while Mirroring the BMP image: %s.\n", err)
+				}
 			case "filter":
 				return
 			case "crop":
