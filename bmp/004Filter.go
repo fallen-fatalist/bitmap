@@ -98,7 +98,42 @@ func (b *bmp) Filter(flagValue string) error {
 			}
 		}
 	case "pixelate":
-		
+		// See algorithm description (https://bishopfox.com/blog/unredacter-tool-never-pixelation)
+		blockSize := 20
+		var averageBlue uint32
+		var averageGreen uint32
+		var averageRed uint32
+		for blockRowIdx := 0; blockRowIdx+blockSize < len(b.pixelArray); blockRowIdx += blockSize {
+			for blockColIdx := uint32(0); blockColIdx+uint32(blockSize) < rowSize; blockColIdx += uint32(blockSize) {
+
+				// average colors calculation
+				for pixelRowIdx := blockRowIdx; pixelRowIdx < blockRowIdx+blockSize; pixelRowIdx++ {
+					for pixelColIdx := blockColIdx; pixelColIdx+3 < blockColIdx+uint32(blockSize); pixelColIdx += 3 {
+						averageBlue += uint32(b.pixelArray[pixelRowIdx][pixelColIdx])
+						averageGreen += uint32(b.pixelArray[pixelRowIdx][pixelColIdx+1])
+						averageRed += uint32(b.pixelArray[pixelRowIdx][pixelColIdx+2])
+					}
+				}
+
+				averageBlue /= uint32(blockSize) * uint32(blockSize)
+				averageGreen /= uint32(blockSize) * uint32(blockSize)
+				averageRed /= uint32(blockSize) * uint32(blockSize)
+
+				// average color assigning
+				for pixelRowIdx := blockRowIdx; pixelRowIdx < blockRowIdx+blockSize; pixelRowIdx++ {
+					for pixelColIdx := blockColIdx; pixelColIdx+3 < blockColIdx+uint32(blockSize); pixelColIdx += 3 {
+						b.pixelArray[pixelRowIdx][pixelColIdx] = byte(averageBlue)
+						b.pixelArray[pixelRowIdx][pixelColIdx+1] = byte(averageGreen)
+						b.pixelArray[pixelRowIdx][pixelColIdx+2] = byte(averageRed)
+					}
+				}
+
+				averageBlue = 0
+				averageGreen = 0
+				averageRed = 0
+			}
+		}
+
 	case "blur":
 		// Box 5x5 blur method
 		// kernel related weight of color sums
