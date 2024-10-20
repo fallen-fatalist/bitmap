@@ -39,6 +39,11 @@ func TestLoadSave(t *testing.T) {
 			sourceFile: "../samples/sample_5184x3456.bmp",
 			outputFile: "../samples/sample_5184x3456-saved.bmp",
 		},
+		{
+			name:       "Square bmp image",
+			sourceFile: "../samples/marilyn.bmp",
+			outputFile: "../samples/marilyn-saved.bmp",
+		},
 	}
 
 	for _, test := range tests {
